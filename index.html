@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+
+  <meta property="og:title" content="JayDev Games">
+  <meta property="og:description" content="Play browser games and tools by JayDev">
+  <meta property="og:image" content="logo.png">
+  <meta property="og:type" content="website">
+
+  <meta charset="UTF-8" />
+  <title>JayDev Games</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href="logo.png">
+
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111827;
+      --text: #ffffff;
+      --muted: #94a3b8;
+      --btn: #1e293b;
+      --btn-hover: #334155;
+      --border: rgba(255,255,255,0.08);
+    }
+
+    body.light {
+      --bg: #f8fafc;
+      --panel: #ffffff;
+      --text: #0f172a;
+      --muted: #475569;
+      --btn: #e2e8f0;
+      --btn-hover: #cbd5e1;
+      --border: rgba(0,0,0,0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  padding: 40px 0 100px;
+}
+
+
+
+    .container {
+      margin: 0 auto;
+      width: 100%;
+      max-width: 700px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 24px;
+      height: 2000;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 2rem;
+     
+    }
+
+    .toggle {
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: var(--btn);
+      cursor: pointer;
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .search {
+      margin: 18px 0 30px;
+    }
+
+    .search input {
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--btn);
+      color: var(--text);
+      font-size: 1rem;
+      outline: none;
+    }
+
+    h2 {
+      font-size: 1.1rem;
+      margin: 26px 0 12px;
+      color: var(--muted);
+      letter-spacing: 1px;
+    }
+
+    .games {
+      display: grid;
+      gap: 14px;
+    }
+
+    .game-btn {
+      text-decoration: none;
+      padding: 16px;
+      border-radius: 14px;
+      background: var(--btn);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 1.1rem;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+    }
+
+
+    .game-btn {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  overflow: visible;
+  transition: all 0.35s ease;
+  height: 60px;
+}
+
+.game-btn:hover {
+  height: 130px;
+}
+
+.game-info {
+  font-size: 0.8rem;
+  line-height: 1.4;
+  opacity: 0;
+  max-height: 0;
+  transition: all 0.35s ease;
+  color: var(--muted);
+}
+
+.game-btn:hover .game-info {
+  opacity: 1;
+  max-height: 100px;
+}
+
+
+.toggle {
+  padding: 8px;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+}
+
+.mode-icon {
+  width: 20px;
+  height: 20px;
+  transition: 0.25s ease;
+}
+
+.toggle:hover .mode-icon {
+  transform: rotate(180deg);
+  transition: 0.25s ease;
+}
+
+.site-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  background: #020617; /* darker than page */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  z-index: 99999;
+  
+
+}
+
+.site-footer span {
+  color: #94a3b8;
+  font-size: 0.1frem;
+}
+
+.footer-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.footer-line {
+  color: #94a3b8;
+  font-size: 0.75rem;
+}
+
+.footer-links {
+  display: flex;
+  gap: 16px;
+}
+
+.footer-links a img {
+  width: 25px;
+  height: 25px;
+  opacity: 0.7;
+  transition: 0.2s ease;
+}
+
+.footer-links a img {
+  filter: brightness(0) invert(1);
+}
+
+
+
+.footer-links a:hover img {
+  opacity: 1;
+  transform: translateY(-2px) scale(1.05);
+}
+
+body.light .footer-links img {
+  filter: invert(1);
+}
+
+
+
+
+.game-top {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.game-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.game-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  object-fit: cover;
+  background: #00000030; /* fallback */
+}
+
+
+
+    .game-btn:hover {
+      background: var(--btn-hover);
+    }
+
+    .game-btn span {
+      font-size: 0.9rem;
+      opacity: 0.6;
+      font-weight: normal;
+    }
+
+    .version {
+        display:none;
+  font-size: 0.75rem;
+  opacity: 0.6;
+  margin-right: 20px;
+  vertical-align: middle;
+  
+}
+
+
+
+
+    .tag {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  font-size: 0.65rem;
+  padding: 3px 7px;
+  border-radius: 999px;
+  background: #22c55e;
+  color: white;
+  font-weight: 700;
+}
+
+.tag {
+  z-index: 20;
+  pointer-events: none;
+}
+
+.game-btn {
+  position: relative;
+}
+
+.container {
+  overflow: visible;
+}
+
+
+
+  .updated {
+  background: #f97316;
+}
+
+  .comingsoon {
+  background: #0080ff;
+}
+
+  .scheduled {
+  background: #ff1000;
+}
+
+.site-intro {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin: 6px 0 18px;
+  place-items: center;
+}
+
+
+
+
+
+    footer {
+      text-align: center;
+      margin-top: 30px;
+      opacity: 0.4;
+      font-size: 0.8rem;
+      
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+  <div>
+    <h1>JayDev Games</h1>
+    <p class="site-intro">JayDev Games is an indie project of simple interactive browser games, tools and simulators; designed to be fun and accessible</p>
+  </div>
+
+  <button class="toggle" onclick="toggleTheme()">
+    <img src="mode.svg" alt="Toggle theme" class="mode-icon">
+  </button>
+</header>
+
+
+  <div class="search">
+    <input type="text" id="searchInput" placeholder="Search games & tools..." onkeyup="filterGames()">
+  </div>
+
+  <!-- GAMES -->
+  <h2>GAMES</h2>
+  <div class="games" id="gameList">
+
+    <a class="game-btn" href="https://sky-drift.netlify.app" data-name="sky drift">
+
+  <div class="game-top">
+
+  <div class="game-left">
+    <img src="skydriftlogocopy.png" class="game-icon">
+    <strong>Sky Drift</strong>
+  </div>
+
+  <span>Open →</span>
+
+</div>
+
+
+  <div class="game-info">
+    Version: 1.0.0<br>
+    Published: October 28 2025<br>
+    Limitlessly soar to the skies with this infinite free-flyer game
+  </div>
+
+</a>
+
+
+<a class="game-btn" href="construction.html" target="_blank">
+
+  <div class="game-top">
+
+  <div class="game-left">
+    <img src="blindrunlogocopy.png" class="game-icon">
+    <strong>Blind Run</strong>
+  </div>
+
+  <span></span>
+  <div class="tag scheduled">SCHEDULED</div>
+
+</div>
+
+
+  <div class="game-info">
+    Version: <br>
+    Expected Release Date: February 2026<br>
+    <em>No description added</em>
+  </div>
+
+</a>
+
+
+<a class="game-btn" href="construction.html" target="_blank">
+
+  <div class="game-top">
+
+  <div class="game-left">
+    <img src="followingdirectionslogocopy.png" class="game-icon">
+    <strong>Following Directions</strong>
+  </div>
+
+  <span></span>
+  <div class="tag scheduled">SCHEDULED</div>
+
+</div>
+
+
+  <div class="game-info">
+    Version: <br>
+    Expected Release Date: February 2026<br>
+    <em>No description added</em>
+  </div>
+
+</a>
+
+
+  </div>
+
+  <!-- TOOLS -->
+  <h2>TOOLS</h2>
+  <div class="games">
+
+    <a class="game-btn" href="https://playdarts.netlify.app" data-name="darts tracker">
+
+ <div class="game-top">
+
+  <div class="game-left">
+    <img src="dartstrackerlogocopy.png" class="game-icon">
+    <strong>Darts Tracker</strong>
+  </div>
+
+  <span>Open →</span>
+  <div class="tag new">NEW</div>
+
+
+</div>
+
+
+  <div class="game-info">
+    Version: 1.0.0<br>
+    Published: November 24 2025<br>
+    Track your dart game with this easy-to-use Darts Tracker
+  </div>
+
+</a>
+
+
+    <a class="game-btn" href="construction.html" target="_blank">
+
+
+  <div class="game-top">
+
+  <div class="game-left">
+    <img src="ludologocopy.png" class="game-icon">
+    <strong>Ludo Next Best Move</strong>
+  </div>
+
+  <span></span>
+  <div class="tag comingsoon">COMING SOON</div>
+
+</div>
+
+
+  <div class="game-info">
+    Version: <br>
+    Expected Release Date: December 2025<br>
+    <em>No description added</em>
+  </div>
+
+</a>
+    
+
+  </div>
+
+  <!-- EXPERIMENTS -->
+  <h2>SIMULATORS</h2>
+  <div class="games">
+
+     <a class="game-btn" href="https://namithstockmarket.netlify.app" data-name="stock market simulator">
+
+  <div class="game-top">
+
+  <div class="game-left">
+    <img src="stockmarketsimlogocopy.png" class="game-icon">
+    <strong>Stock Market Simulator</strong>
+  </div>
+
+  <span>Open →</span>
+  <div class="tag updated">UPDATED</div>
+
+
+</div>
+
+
+  <div class="game-info">
+    <b>Version: 1.3.0 <br>
+    Published: October 29 - November 13 2025 <br>
+    Immerse yourself in the world of live stock markets
+  </div>
+
+</a>
+
+  </div>
+
+  
+
+</div>
+
+<div class="site-footer">
+  <div class="footer-inner">
+
+    <div class="footer-line">
+      © JayDev Games 2025
+    </div>
+
+    <div class="footer-links">
+      <a href="https://youtube.com/@JayDevGames1" target="_blank">
+        <img src="youtube.svg" alt="YouTube">
+      </a>
+
+      <a href="https://github.com/jaydevgames1" target="_blank">
+        <img src="github.svg" alt="GitHub">
+      </a>
+
+      <a href="mailto:gamesjaydev@gmail.com">
+        <img src="email.svg" alt="Email">
+      </a>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+<script>
+  function toggleTheme() {
+    document.body.classList.toggle("light");
+  }
+
+  function filterGames() {
+    const input = document.getElementById("searchInput").value.toLowerCase();
+    const buttons = document.querySelectorAll(".game-btn");
+
+    buttons.forEach(btn => {
+      const name = btn.dataset.name || btn.innerText.toLowerCase();
+      if (name.includes(input)) {
+        btn.style.display = "flex";
+      } else {
+        btn.style.display = "none";
+      }
+    });
+  }
+</script>
+
+</body>
+</html>

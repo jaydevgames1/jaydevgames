@@ -33,7 +33,18 @@
       --btn: #e2e8f0;
       --btn-hover: #cbd5e1;
       --border: rgba(0,0,0,0.08);
+
+
     }
+/* Make sort SVGs white in dark mode, and revert in light mode */
+.sort-btn img {
+  filter: invert(1); /* white on dark */
+  width: 20px;
+  height: 20px;
+}
+body.light .sort-btn img {
+  filter: invert(0); /* normal in light */
+}
 
     * {
       box-sizing: border-box;
@@ -50,15 +61,44 @@ body {
 
 
     .container {
-      margin: 0 auto;
-      width: 100%;
-      max-width: 700px;
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 24px;
-      height: 2000;
-    }
+  margin: 0 auto;
+  width: 100%;
+  max-width: 700px;
+  padding: 24px;
+
+  /* GLASSMORPHISM */
+  background: rgba(18, 25, 40, 0.55);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+
+  border: 1px solid var(--border);
+  border-radius: 22px;
+
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.3);
+}
+
+/* Light mode glass */
+body.light .container {
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 20px 45px rgba(0,0,0,0.08);
+}
+
+
+.container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+
+  background: linear-gradient(
+    135deg,
+    rgba(255,255,255,0.06),
+    transparent,
+    rgba(255,255,255,0.03)
+  );
+}
+
 
     header {
       display: flex;
@@ -97,6 +137,109 @@ body {
       font-size: 1rem;
       outline: none;
     }
+
+    .search-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.sort-btn {
+  min-width: 90px;      /* makes them longer */
+  padding: 8px 14px;    /* adds breathing room */
+  text-align: center;
+}
+
+
+.search-wrap input {
+  flex: 1;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--btn);
+  color: var(--text);
+  font-size: 1rem;
+  outline: none;
+}
+
+.filter-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--btn);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.filter-btn img {
+  width: 20px;
+  height: 20px;
+  opacity: 0.7;
+}
+
+.filter-btn:hover {
+  background: var(--btn-hover);
+}
+
+
+
+/* FILTER POPUP STYLING */
+.filter-popup {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+.filter-popup[aria-hidden="false"] { display:flex; }
+
+.filter-box { 
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 18px;
+  border-radius: 12px;
+  width: 92%;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.filter-section { display:flex; flex-direction:column; gap:8px; font-size:0.95rem; color:var(--muted); }
+
+.sort-row { display:flex; gap:8px; }
+.sort-btn {
+  background: var(--btn);
+  border: 1px solid var(--border);
+  height:40px;
+  width:40px;
+  border-radius:8px;
+  display:grid;
+  place-items:center;
+  cursor:pointer;
+  filter: invert (1);
+}
+.sort-btn img { width:20px; height:20px; opacity:0.85; }
+.sort-btn.active { outline: 2px solid rgba(255,255,255,0.08); transform: translateY(-2px); }
+
+.close-filter {
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: var(--btn);
+  border: 1px solid var(--border);
+  color: var(--text);
+  cursor:pointer;
+}
+
+
+body.light .filter-btn img {
+  filter: invert(0);
+}
+
 
     h2 {
       font-size: 1.1rem;
@@ -168,9 +311,18 @@ body {
   transition: 0.25s ease;
 }
 
-.toggle:hover .mode-icon {
-  transform: rotate(180deg);
+.mode-icon {
+  filter: brightness(0) invert(1);
+}
+body.light .mode-icon  {
+  filter: none;
+}
+
+
+
+.toggle .mode-icon {
   transition: 0.25s ease;
+  
 }
 
 .site-footer {
@@ -221,6 +373,7 @@ body {
 .footer-links a img {
   filter: brightness(0) invert(1);
 }
+
 
 
 
@@ -280,23 +433,56 @@ body.light .footer-links img {
 
 
 
+.mission {
+  margin: 20px 0 10px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  background: var(--btn);
+  border: 1px solid var(--border);
+}
 
-    .tag {
+.mission p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+
+
+.tag {
   position: absolute;
   top: -6px;
   right: -6px;
   font-size: 0.65rem;
-  padding: 3px 7px;
+  padding: 4px 8px;
   border-radius: 999px;
-  background: #22c55e;
-  color: white;
-  font-weight: 700;
-}
 
-.tag {
+  /* Glassmorphic effect */
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px) saturate(180%);
+  -webkit-backdrop-filter: blur(8px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+
+  /* Shadow for depth */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+
+  color: #ffffff;
+  font-weight: 700;
   z-index: 20;
   pointer-events: none;
+  transition: all 0.25s ease;
 }
+
+/* Hover effect to subtly emphasize */
+.game-btn:hover .tag {
+  background: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+}
+
+
+
+
 
 .game-btn {
   position: relative;
@@ -327,6 +513,142 @@ body.light .footer-links img {
   place-items: center;
 }
 
+.callout {
+  margin-top: 30px;
+  padding: 18px;
+  border-radius: 16px;
+  background: linear-gradient(145deg, var(--btn), var(--panel));
+  border: 1px solid var(--border);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.callout p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.callout a {
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 600;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--btn);
+  width: max-content;
+  margin: 0 auto;
+  transition: 0.2s ease;
+}
+
+.callout a:hover {
+  background: var(--btn-hover);
+  transform: translateY(-1px);
+}
+
+
+/* --- GLASSMORPHISM CALLOUT --- */
+
+.callout-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 28px;
+  margin: 60px auto;
+  max-width: 1500px;
+  padding: 35px 25px;
+
+  background: rgba(255,255,255,0.035);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+
+  border: 1px solid var(--border);
+  border-radius: 22px;
+}
+
+.callout-item {
+  padding: 26px 22px;
+  border-radius: 16px;
+  background: rgba(10,10,10,0.45);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  transition: 0.35s ease;
+}
+
+.callout-item::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(120deg,
+    rgba(255,255,255,0.08),
+    transparent,
+    rgba(255,255,255,0.04));
+}
+
+
+body.light .callout-item {
+  background: rgba(255,255,255,0.65);
+}
+
+.callout-item:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 30px rgba(0,0,0,0.25);
+}
+
+.callout-icon {
+  width: 42px;
+  height: 42px;
+  margin-bottom: 14px;
+}
+
+.callout-item h3 {
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: var(--text);
+  margin-bottom: 18px;
+}
+
+.callout-btn {
+  display: inline-block;
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(0,255,200,0.5);
+
+  background: rgba(0,255,200,0.15);
+  color: #00f5c0;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: 0.2s;
+}
+
+.callout-btn:hover {
+  background: #00f5c0;
+  color: #020617;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .callout-container { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 600px) {
+  .callout-container { grid-template-columns: 1fr; }
+}
+
+/* Invert callout icons for dark mode */
+.callout-icon img {
+  filter: brightness(0) invert(1);
+}
+
+body.light .callout-icon img {
+  filter: none;
+}
 
 
 
@@ -342,14 +664,11 @@ body.light .footer-links img {
 </head>
 <body>
 
-<!-- test -->
-
-
 <div class="container">
   <header>
   <div>
     <h1>JayDev Games</h1>
-    <p class="site-intro">JayDev Games is an indie project of simple interactive browser games, tools and simulators; designed to be fun and accessible</p>
+    
   </div>
 
   <button class="toggle" onclick="toggleTheme()">
@@ -358,15 +677,40 @@ body.light .footer-links img {
 </header>
 
 
-  <div class="search">
-    <input type="text" id="searchInput" placeholder="Search games & tools..." onkeyup="filterGames()">
-  </div>
+  <div class="search-wrap">
+  <input 
+    type="text" 
+    id="searchInput" 
+    placeholder="Search games & tools..."
+    onkeyup="filterGames()"
+  >
+
+  <button class="filter-btn" onclick="toggleFilter()">
+    <img src="filter.svg" alt="Filter">
+  </button>
+</div>
+
+<div class="mission">
+  <p>
+    JayDev is a student solo developer where ideas turn into simple,
+    accessible games, tools, and experiments; built for fun, curiosity, and creativity.
+  </p>
+</div>
+
+
 
   <!-- GAMES -->
   <h2>GAMES</h2>
   <div class="games" id="gameList">
 
-    <a class="game-btn" href="https://sky-drift.netlify.app" data-name="sky drift">
+    <a class="game-btn" 
+   href="https://sky-drift.netlify.app"
+   data-name="Sky Drift"
+   data-type="games"
+   data-published="2025-10-28"
+   data-version="1.0.0"
+   data-tags="">
+
 
   <div class="game-top">
 
@@ -376,6 +720,7 @@ body.light .footer-links img {
   </div>
 
   <span>Open →</span>
+
 
 </div>
 
@@ -389,7 +734,48 @@ body.light .footer-links img {
 </a>
 
 
-<a class="game-btn" href="construction.html" target="_blank">
+
+
+
+
+<a class="game-btn" 
+   href="construction.html"
+   data-name="Following Directions"
+   data-type="games"
+   data-published=""
+   data-version=""
+   data-tags="comingsoon">
+
+
+  <div class="game-top">
+
+  <div class="game-left">
+    <img src="followingdirectionslogocopy.png" class="game-icon">
+    <strong>Following Directions</strong>
+  </div>
+
+  <span></span>
+  <div class="tag comingsoon">COMING SOON</div>
+
+</div>
+
+
+  <div class="game-info">
+    Version: <br>
+    Expected Release Date: January 2026<br>
+    Can you take on this quiz and follow the directions?
+  </div>
+
+</a>
+
+
+<a class="game-btn" 
+   href="construction.html"
+   data-name="Blind Run"
+   data-type="games"
+   data-published=""
+   data-version=""
+   data-tags="scheduled">
 
   <div class="game-top">
 
@@ -412,14 +798,19 @@ body.light .footer-links img {
 
 </a>
 
-
-<a class="game-btn" href="construction.html" target="_blank">
+<a class="game-btn" 
+   href="construction.html"
+   data-name="Puzzle Collapse"
+   data-type="games"
+   data-published=""
+   data-version=""
+   data-tags="scheduled">
 
   <div class="game-top">
 
   <div class="game-left">
-    <img src="followingdirectionslogocopy.png" class="game-icon">
-    <strong>Following Directions</strong>
+    <img src="puzzlecollapselogocopy.png" class="game-icon">
+    <strong>Puzzle Collapse</strong>
   </div>
 
   <span></span>
@@ -443,7 +834,13 @@ body.light .footer-links img {
   <h2>TOOLS</h2>
   <div class="games">
 
-    <a class="game-btn" href="https://playdarts.netlify.app" data-name="darts tracker">
+    <a class="game-btn" 
+   href="https://playdarts.netlify.app"
+   data-name="Darts Tracker"
+   data-type="tools"
+   data-published="2025-11-24"
+   data-version="1.0.0"
+   data-tags="">
 
  <div class="game-top">
 
@@ -453,7 +850,7 @@ body.light .footer-links img {
   </div>
 
   <span>Open →</span>
-  <div class="tag new">NEW</div>
+  
 
 
 </div>
@@ -468,7 +865,13 @@ body.light .footer-links img {
 </a>
 
 
-    <a class="game-btn" href="construction.html" target="_blank">
+    <a class="game-btn" 
+   href="https://playdarts.netlify.app"
+   data-name="Ludo Next Best Move"
+   data-type="tools"
+   data-published=""
+   data-version=""
+   data-tags="scheduled">
 
 
   <div class="game-top">
@@ -479,14 +882,14 @@ body.light .footer-links img {
   </div>
 
   <span></span>
-  <div class="tag comingsoon">COMING SOON</div>
+  <div class="tag scheduled">SCHEDULED</div>
 
 </div>
 
 
   <div class="game-info">
     Version: <br>
-    Expected Release Date: December 2025<br>
+    Expected Release Date: February 2026<br>
     <em>No description added</em>
   </div>
 
@@ -499,7 +902,13 @@ body.light .footer-links img {
   <h2>SIMULATORS</h2>
   <div class="games">
 
-     <a class="game-btn" href="https://namithstockmarket.netlify.app" data-name="stock market simulator">
+     <a class="game-btn" 
+   href="https://namithstockmarket.netlify.app"
+   data-name="Stock Market Simulator"
+   data-type="simulators"
+   data-published="2025-10-29"
+   data-version="1.3.0"
+   data-tags="">
 
   <div class="game-top">
 
@@ -509,7 +918,7 @@ body.light .footer-links img {
   </div>
 
   <span>Open →</span>
-  <div class="tag updated">UPDATED</div>
+  
 
 
 </div>
@@ -529,6 +938,46 @@ body.light .footer-links img {
 
 </div>
 
+
+<div class="callout-container">
+
+  <div class="callout-item">
+    <div class="callout-icon">
+      <img src="youtube.svg" alt="YouTube">
+    </div>
+    <h3>Want to see updates, devlogs and trailers?</h3>
+    <a href="https://youtube.com/@JayDevGames1" class="callout-btn">Watch on YouTube →</a>
+  </div>
+
+  <div class="callout-item">
+    <div class="callout-icon">
+      <img src="github.svg" alt="GitHub">
+    </div>
+    <h3>Want to view code or use my projects?</h3>
+    <a href="https://github.com/jaydevgames1" class="callout-btn">View GitHub →</a>
+  </div>
+
+  <div class="callout-item">
+    <div class="callout-icon">
+      <img src="email.svg" alt="Email">
+    </div>
+    <h3>Want to formally contact or collaborate?</h3>
+    <a href="mailto:gamesjaydev@gmail.com" class="callout-btn">Send an Email →</a>
+  </div>
+
+  <div class="callout-item">
+    <div class="callout-icon">
+      <img src="discord.svg" alt="Discord">
+    </div>
+    <h3>Want to get involved & be a part of this journey?</h3>
+    <a href="https://discord.gg/NT7kGySNGM" class="callout-btn">Join the Discord →</a>
+  </div>
+
+</div>
+
+
+
+
 <div class="site-footer">
   <div class="footer-inner">
 
@@ -547,6 +996,10 @@ body.light .footer-links img {
 
       <a href="mailto:gamesjaydev@gmail.com">
         <img src="email.svg" alt="Email">
+      </a>
+
+      <a href="https://discord.gg/NT7kGySNGM" target="_blank">
+        <img src="discord.svg" alt="Discord">
       </a>
     </div>
 
@@ -574,7 +1027,213 @@ body.light .footer-links img {
       }
     });
   }
+
+/* ---------- FILTER JS (replace existing) ---------- */
+
+function toggleFilter() {
+  const popup = document.getElementById("filterPopup");
+  if (!popup) return;
+  const isOpen = popup.getAttribute("aria-hidden") === "false";
+  popup.setAttribute("aria-hidden", isOpen ? "true" : "false");
+}
+
+function getSelectedValues(name) {
+  return Array.from(document.querySelectorAll(`.filter-box input[name="${name}"]:checked`)).map(i => i.value);
+}
+
+function applyAndCloseFilters() {
+  applyFilters();
+  toggleFilter();
+}
+
+function clearFilters() {
+  const popup = document.getElementById("filterPopup");
+  if (!popup) return;
+  // uncheck all checkboxes
+  popup.querySelectorAll('.filter-box input[type="checkbox"]').forEach(i => i.checked = false);
+  // reset date and version inputs
+  const from = popup.querySelector('#publishedFrom');
+  const to = popup.querySelector('#publishedTo');
+  const ver = popup.querySelector('#versionFilter');
+  if (from) from.value = '';
+  if (to) to.value = '';
+  if (ver) ver.value = '';
+  // set default: types checked
+  popup.querySelectorAll('.filter-box input[name="type"]').forEach(i => i.checked = true);
+  // remove any active sort
+  document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+  // show all cards
+  document.querySelectorAll('.game-btn').forEach(c => c.style.display = 'flex');
+}
+
+function applyFilters() {
+  const selectedTags = getSelectedValues('tag');       // e.g. ['new','updated']
+  const selectedTypes = getSelectedValues('type');     // e.g. ['games','tools']
+  const activeSort = document.querySelector('.sort-btn.active');
+  const sortMode = activeSort ? activeSort.dataset.sort : null;
+
+  const publishedFrom = document.querySelector('#publishedFrom')?.value || '';
+  const publishedTo   = document.querySelector('#publishedTo')?.value || '';
+  const versionMatch  = (document.querySelector('#versionFilter')?.value || '').trim().toLowerCase();
+
+  const searchInput = (document.getElementById('searchInput')?.value || '').toLowerCase();
+
+  const cards = Array.from(document.querySelectorAll('.game-btn'));
+
+  cards.forEach(card => {
+    const type = (card.dataset.type || '').toLowerCase();
+    const name = (card.dataset.name || card.innerText || '').toLowerCase();
+
+    // tags: prefer data-tags attribute; fallback to tag element classes
+    const dataTags = (card.dataset.tags || '').toLowerCase().split(/\s+/).filter(Boolean);
+    let tagVal = null;
+    if (dataTags.length) {
+      tagVal = dataTags; // array
+    } else {
+      const tagEl = card.querySelector('.tag');
+      if (tagEl) {
+        const classes = Array.from(tagEl.classList).map(c => c.toLowerCase());
+        // classes like 'new', 'updated', 'comingsoon', 'scheduled'
+        tagVal = classes.filter(c => ['new','updated','comingsoon','scheduled'].includes(c));
+      } else tagVal = [];
+    }
+
+    // published and version from data attrs
+    const published = card.dataset.published || ''; // expect YYYY-MM-DD
+    const version = (card.dataset.version || '').toLowerCase();
+
+    // TYPE check
+    const typeOk = selectedTypes.length === 0 || selectedTypes.includes(type);
+
+    // TAG check: if no tags selected => ok. Else card must have at least one selected tag.
+    const tagOk = selectedTags.length === 0 || (Array.isArray(tagVal) && tagVal.some(t => selectedTags.includes(t)));
+
+    // NAME / search check
+    const nameOk = !searchInput || name.includes(searchInput);
+
+    // VERSION check - simple substring match if versionMatch not empty
+    const versionOk = !versionMatch || (version && version.includes(versionMatch));
+
+    // Published date range check
+    let publishedOk = true;
+    if (publishedFrom || publishedTo) {
+      const pTime = published ? new Date(published).getTime() : null;
+      if (publishedFrom && publishedTo) {
+        const fromTime = new Date(publishedFrom).getTime();
+        const toTime = new Date(publishedTo).getTime();
+        publishedOk = pTime !== null && pTime >= fromTime && pTime <= toTime;
+      } else if (publishedFrom) {
+        const fromTime = new Date(publishedFrom).getTime();
+        publishedOk = pTime !== null && pTime >= fromTime;
+      } else if (publishedTo) {
+        const toTime = new Date(publishedTo).getTime();
+        publishedOk = pTime !== null && pTime <= toTime;
+      }
+    }
+
+    // final visibility
+    const show = typeOk && tagOk && nameOk && versionOk && publishedOk;
+    card.style.display = show ? 'flex' : 'none';
+  });
+
+  // run sort after filtering
+  if (sortMode) sortCards(sortMode);
+}
+
+function sortCards(mode) {
+  // selectors tuned to your layout: #gameList for games, .games (second) for tools, third for simulators
+  const sections = [
+    { selector: '#gameList' },
+    { selector: '.container > h2 + .games' },                     // first .games after second H2 may vary; this attempts to match Tools
+    { selector: '.container > h2:nth-of-type(3) + .games' }       // fallback; if this doesn't match exactly, you can replace selectors with IDs
+  ];
+
+  // fallback: if second selectors fail, just perform sorting on each .games found
+  const foundGamesContainers = Array.from(document.querySelectorAll('.games'));
+
+  foundGamesContainers.forEach(container => {
+    const cards = Array.from(container.querySelectorAll('.game-btn')).filter(c => c.style.display !== 'none');
+    let sorted = cards.slice();
+
+    if (mode === 'az') {
+      sorted.sort((a,b) => (a.dataset.name || '').localeCompare(b.dataset.name || ''));
+    } else if (mode === 'za') {
+      sorted.sort((a,b) => (b.dataset.name || '').localeCompare(a.dataset.name || ''));
+    } else if (mode === 'newest' || mode === 'oldest') {
+      sorted.sort((a,b) => {
+        const da = a.dataset.published || '';
+        const db = b.dataset.published || '';
+        const ta = da ? new Date(da).getTime() : 0;
+        const tb = db ? new Date(db).getTime() : 0;
+        return ta - tb;
+      });
+      if (mode === 'newest') sorted.reverse();
+    }
+
+    sorted.forEach(card => container.appendChild(card));
+  });
+}
+
+/* sort button toggle */
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('.sort-btn');
+  if (!btn) return;
+  document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+});
+/* Escape closes filter */
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    const popup = document.getElementById('filterPopup');
+    if (popup && popup.getAttribute('aria-hidden') === 'false') toggleFilter();
+  }
+});
+
+
 </script>
+
+
+<!-- FILTER POPUP -->
+<div class="filter-popup" id="filterPopup" aria-hidden="true">
+  <div class="filter-box" role="dialog" aria-label="Filters">
+    <h3>Filters</h3>
+
+    <div class="filter-section">
+      <strong>Tags</strong>
+      <label><input type="checkbox" name="tag" value="new"> New</label>
+      <label><input type="checkbox" name="tag" value="updated"> Updated</label>
+      <label><input type="checkbox" name="tag" value="comingsoon"> Coming Soon</label>
+      <label><input type="checkbox" name="tag" value="scheduled"> Scheduled</label>
+    </div>
+
+    <div class="filter-section">
+      <strong>Type</strong>
+      <label><input type="checkbox" name="type" value="games" checked> Games</label>
+      <label><input type="checkbox" name="type" value="tools" checked> Tools</label>
+      <label><input type="checkbox" name="type" value="simulators" checked> Simulators</label>
+    </div>
+
+    <div class="filter-section">
+      <strong>Published (date)</strong>
+      <div style="display:flex; gap:8px;">
+        <input id="publishedFrom" type="date" placeholder="From" style="flex:1; padding:8px; border-radius:6px; border:1px solid var(--border); background:var(--btn); color:var(--text)">
+        <input id="publishedTo"   type="date" placeholder="To"   style="flex:1; padding:8px; border-radius:6px; border:1px solid var(--border); background:var(--btn); color:var(--text)">
+      </div>
+    </div>
+
+    <div class="filter-section">
+      <strong>Version</strong>
+      <input id="versionFilter" type="text" placeholder="e.g. 1.0 or 1.3.0" style="padding:8px; border-radius:6px; border:1px solid var(--border); background:var(--btn); color:var(--text)">
+    </div>
+
+    
+
+    <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:6px;">
+      <button class="close-filter" onclick="applyAndCloseFilters()">Apply</button>
+      <button class="close-filter" onclick="clearFilters()">Clear</button>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>
